@@ -9,7 +9,7 @@ function RecommendationForm({ products, setRecommendedIds }) {
 
     setLoading(true);
 
-    const res = await fetch("/recommend", {
+    const res = await fetch("/api/recommend", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt, products })

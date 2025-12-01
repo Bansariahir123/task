@@ -9,15 +9,26 @@ function RecommendationForm({ products, setRecommendedIds }) {
 
     setLoading(true);
 
-    const res = await fetch("/api/recommend", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, products })
-    });
+    try {
+      const res = await fetch("/api/recommend", { // <-- updated path
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, products }),
+      });
 
-    const data = await res.json();
-    setRecommendedIds(data.recommended || []);
-    setLoading(false);
+      if (!res.ok) {
+        console.error("API error:", await res.text());
+        setLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+      setRecommendedIds(data.recommended || []);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -38,3 +49,4 @@ function RecommendationForm({ products, setRecommendedIds }) {
 }
 
 export default RecommendationForm;
+
